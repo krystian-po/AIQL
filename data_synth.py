@@ -9,9 +9,9 @@ call_types = ['incoming', 'outgoing']
 
 conn = mysql.connector.connect(
     host='localhost',
-    user='test',
-    password='password',
-    database='AIQL'
+    user='super',
+    password='root',
+    database='aiql'
 )
 cursor = conn.cursor()
 

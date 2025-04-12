@@ -1,6 +1,6 @@
 DB_CONFIG = {
     'host': 'localhost',
-    'user': 'root',
+    'user': 'super',
     'password': 'root',
-    'database': 'AIQL'
+    'database': 'aiql'
 }
