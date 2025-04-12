@@ -1,6 +1,9 @@
+from flask import Flask, request, jsonify, render_template
 import mysql.connector
-from config import DB_CONFIG
 import subprocess
+from config import DB_CONFIG
+
+app = Flask(__name__)
 
 SCHEMA_CONTEXT = """
 Database schema:
@@ -56,27 +59,27 @@ def generate_sql(prompt):
     
     return sql_query
 
-def main():
-    """Main function to interact with the user and generate SQL queries."""
-    while True:
-        user_input = input("\n What would you like to know? (or 'q' to quit): ")
-        if user_input.lower() == 'q':
-            break
-        
-        prompt = build_sql_prompt(user_input)
-        
+@app.route('/')
+def home():
+    """Render the home page (index.html)"""
+    return render_template('index.html')
+
+@app.route('/query', methods=['POST'])
+def handle_query():
+    """Handles the query and returns the results"""
+    try:
+        user_question = request.json['question']
+        prompt = build_sql_prompt(user_question)
         sql_query = generate_sql(prompt)
         
-        print(f"\nGenerated SQL:\n{sql_query}")
-        
-        try:
-            results = run_sql_query(sql_query)
-            
-            print("\nResults:")
-            for row in results:
-                print(row)
-        except Exception as e:
-            print("SQL failed:", e)
+        results = run_sql_query(sql_query)
+
+        formatted_results = [{"row": row} for row in results]
+
+        return jsonify({"sql_query": sql_query, "results": formatted_results})
+
+    except Exception as e:
+        return jsonify({"error": f"SQL Query failed: {str(e)}"}), 400
 
 if __name__ == "__main__":
-    main()
+    app.run(debug=True)

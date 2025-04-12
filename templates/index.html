@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Query Generator Chatbot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .chat-container {
+            background-color: white;
+            width: 100%;
+            max-width: 600px;
+            height: 80vh;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            border-bottom: 2px solid #ddd;
+            background-color: #f7f7f7;
+        }
+        .input-container {
+            display: flex;
+            padding: 10px;
+            background-color: #fff;
+            border-top: 2px solid #ddd;
+        }
+        .input-container input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-right: 10px;
+            outline: none;
+        }
+        .input-container button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .input-container button:hover {
+            background-color: #45a049;
+        }
+        .message {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            max-width: 80%;
+            clear: both;
+        }
+        .message.user {
+            background-color: #4CAF50;
+            color: white;
+            align-self: flex-end;
+        }
+        .message.bot {
+            background-color: #f1f1f1;
+            color: #333;
+            align-self: flex-start;
+        }
+        .message pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+        }
+        .message h3 {
+            margin: 0 0 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="chat-box" id="chatBox">
+            <!-- Chat messages will be appended here -->
+        </div>
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Ask a question..." />
+            <button onclick="submitQuery()">Ask</button>
+        </div>
+    </div>
+
+    <script>
+        const chatBox = document.getElementById('chatBox');
+
+        function appendMessage(content, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+            
+            if (typeof content === 'string') {
+                messageDiv.innerHTML = `<p>${content}</p>`;
+            } else if (content.sql_query) {
+                messageDiv.innerHTML = `
+                    <h3>Generated SQL Query:</h3>
+                    <pre>${content.sql_query}</pre>
+                    <h3>Results:</h3>
+                    <pre>${JSON.stringify(content.results, null, 2)}</pre>
+                `;
+            }
+            
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;  // Scroll to the bottom
+        }
+
+        async function submitQuery() {
+            const userInput = document.getElementById("userInput").value;
+            
+            if (!userInput) return;
+
+            // Append user message
+            appendMessage(userInput, 'user');
+
+            const requestData = { question: userInput };
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/query', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestData),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    appendMessage(result, 'bot');
+                } else {
+                    appendMessage(`Error: ${result.error}`, 'bot');
+                }
+            } catch (error) {
+                appendMessage(`Error: ${error.message}`, 'bot');
+            }
+            
+            // Clear the input field
+            document.getElementById("userInput").value = '';
+        }
+    </script>
+
+</body>
+</html>
