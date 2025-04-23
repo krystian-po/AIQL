@@ -2,3 +2,4 @@ faker
 mysql-connector-python
 transformers
 accelerate
+ollama
