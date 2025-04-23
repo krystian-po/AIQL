@@ -1,2 +1,26 @@
 # AIQL
-Repo for AIQL, attempting to use tinyllama for a database querying chatbot.
+Repo for AIQL, attempting to use ollama for a database querying chatbot.
+** Note: if using large model like sqlcoder(7 billion parameters)(very large 4.1gb download) it requires a lot of compute so best to do on large VM or run it locally. For reference a 6 core 16 GB VM takes anywhere from 10-40 seconds depending on query complexity.
+
+Instructions:
+
+1. Install pre-requisites in requirements.txt. Ollama can be installed using either pip or on their website: (https://ollama.com/download)
+
+2. Once ollama is installed, type "ollama" into terminal to confirm it's installed and download the model you want using "ollama run {model name}".
+The model used for this example is sqlcoder: (https://ollama.com/library/sqlcoder) ~ feel free to test with other models: (https://ollama.com/search).
+
+3. Set up your SQL database and populate config.py with correct existing credentials. It recommend that you give it SELECT prviliges only just in case.
+
+4. If you want to synthesise some data use data_synth.py, it creates 500 fake rows of call data but you can change it however you like.
+
+5. If nothing weird happens, you should be good to ask you first question.
+
+For best results I recommend making clear prompts, some example prompts that work:
+   ~ How many outgoing calls were made from Germany?
+   ~ How many times was Japan a destination?
+   ~ What is the average call duration from Brazil?
+   ~ Which country received the most incoming calls?
+   * Depending on the model, it's size and the data it is fine-tuned on, the results will vary *
+
+If you have any issues/improvements, let me know.
+
