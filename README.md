@@ -4,18 +4,21 @@ Repo for AIQL, attempting to use ollama for a database querying chatbot.
 
 Instructions:
 
-1. Install pre-requisites in requirements.txt. Ollama can be installed using either pip or on their website: (https://ollama.com/download)
+1. Install pre-requisites in requirements.txt.
 
 2. Once ollama is installed, type "ollama" into terminal to confirm it's installed and download the model you want using "ollama run {model name}".
 The model used for this example is sqlcoder: (https://ollama.com/library/sqlcoder) ~ feel free to test with other models: (https://ollama.com/search).
+For this example, do "ollama run sqlcoder", this one is around a 4.1GB download.
 
-3. Set up your SQL database and populate config.py with correct existing credentials. It recommend that you give it SELECT prviliges only just in case.
+4. Set up MySQL, create a database, create relevant tables and populate config.py or enter credentials for an existing database. I recommend that you create a user with SELECT privileges only just in case.
 
-4. If you want to synthesise some data use data_synth.py, it creates 500 fake rows of call data but you can change it however you like.
+5. If you want to synthesise some data use data_synth.py, it creates 500 fake rows of call data but you can change it however you like. Otherwise skip this step.
 
-5. If nothing weird happens, you should be good to ask you first question.
+6. Inside AIQL.py change the db_schema starting line 16 to match the tables you want to query and add relevant info that clarifies database details for the model (have a look to see what that may be).
 
-For best results I recommend making clear prompts, some example prompts that work:
+7. If nothing weird happens, you should be good to ask you first question.
+
+For best results I recommend making clear prompts, some example prompts that work for my specific example:
    ~ How many outgoing calls were made from Germany?
    ~ How many times was Japan a destination?
    ~ What is the average call duration from Brazil?
