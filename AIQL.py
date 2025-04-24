@@ -13,6 +13,7 @@ from typing import List, Tuple, Any, Optional
 ollama_host = "http://localhost:11434"
 ollama_model = "sqlcoder:latest" # change this to the model you want to use
 
+## Make sure to change this schema to reflect the database you would like to query ##
 db_schema = """
 -- Database Schema for MySQL
 -- Table structure for table `calls`
